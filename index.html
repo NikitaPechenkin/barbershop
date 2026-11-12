@@ -205,7 +205,7 @@
         <div class="row"><span>Время</span><span id="sTime">—</span></div>
         <div class="row"><span>Итого</span><span id="sPrice">—</span></div>
         <div style="margin-top:18px;font-size:13px;color:var(--muted)">
-          Демо: заявка сохраняется в браузере и выводится в консоль.
+          Демо: заявка сохраняется в браузере и отправляется в Telegram.
         </div>
       </div>
     </div>
@@ -245,6 +245,15 @@
 <div class="toast" id="toast">✅ Заявка принята! (демо)</div>
 
 <script>
+  /* ============================================================
+     ⚠️ ВСТАВЬ СВОИ ДАННЫЕ ЗДЕСЬ:
+     1) TG_TOKEN   — токен бота от @BotFather
+     2) TG_CHAT_ID — твой chat_id (узнать: https://api.telegram.org/bot<ТОКЕН>/getUpdates)
+     ============================================================ */
+  const TG_TOKEN   = 'ВСТАВЬ_СЮДА_ТОКЕН';
+  const TG_CHAT_ID = 'ВСТАВЬ_СЮДА_CHAT_ID';
+
+  /* ===== ЭЛЕМЕНТЫ ===== */
   const fService=document.getElementById('fService'),
         fDate=document.getElementById('fDate'),
         fTime=document.getElementById('fTime'),
@@ -276,28 +285,60 @@
     return digits.length>=10 && digits.length<=15;
   }
 
-  document.getElementById('bookForm').addEventListener('submit',e=>{
+  function showToast(msg){
+    toast.textContent=msg;
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),3500);
+  }
+
+  /* ===== ОТПРАВКА В TELEGRAM ===== */
+  async function sendToTelegram(data){
+    if(TG_TOKEN.includes('ВСТАВЬ') || TG_CHAT_ID.includes('ВСТАВЬ')){
+      console.warn('TG не настроен: вставь TG_TOKEN и TG_CHAT_ID в скрипт.');
+      // Для демо без токена — считаем «успехом», чтобы показать UX
+      return true;
+    }
+
+    const text =
+      '🔔 Новая заявка BRUT.\n\n' +
+      '👤 Имя: ' + data.name + '\n' +
+      '📞 Телефон: ' + data.phone + '\n' +
+      '✂️ Услуга: ' + data.service + '\n' +
+      '📅 Дата: ' + data.date + '\n' +
+      '🕐 Время: ' + data.time + '\n' +
+      '💰 Итого: ' + data.price + '\n' +
+      (data.comment ? '💬 Комментарий: ' + data.comment + '\n' : '') +
+      '\n🕓 ' + new Date(data.created).toLocaleString('ru-RU');
+
+    try{
+      const res = await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ chat_id: TG_CHAT_ID, text: text })
+      });
+      const json = await res.json();
+      if(!json.ok) console.error('TG error:', json);
+      return json.ok === true;
+    }catch(e){
+      console.error('TG fetch error:', e);
+      return false;
+    }
+  }
+
+  /* ===== ОБРАБОТКА ФОРМЫ ===== */
+  document.getElementById('bookForm').addEventListener('submit', async e=>{
     e.preventDefault();
     formMsg.className='msg';
     formMsg.textContent='';
 
     if(!fName.value.trim()){
-      formMsg.textContent='Введи имя';
-      formMsg.classList.add('err');
-      fName.focus();
-      return;
+      formMsg.textContent='Введи имя'; formMsg.classList.add('err'); fName.focus(); return;
     }
     if(!validPhone(fPhone.value)){
-      formMsg.textContent='Введи корректный телефон';
-      formMsg.classList.add('err');
-      fPhone.focus();
-      return;
+      formMsg.textContent='Введи корректный телефон'; formMsg.classList.add('err'); fPhone.focus(); return;
     }
     if(!fDate.value){
-      formMsg.textContent='Выбери дату';
-      formMsg.classList.add('err');
-      fDate.focus();
-      return;
+      formMsg.textContent='Выбери дату'; formMsg.classList.add('err'); fDate.focus(); return;
     }
 
     const data={
@@ -311,21 +352,28 @@
       created:new Date().toISOString()
     };
 
+    // сохраняем локально (демо-база)
     const all=JSON.parse(localStorage.getItem('brut_bookings')||'[]');
     all.push(data);
     localStorage.setItem('brut_bookings',JSON.stringify(all));
 
-    console.log('ЗАЯВКА:',data);
-    console.log('Всего заявок:',all.length);
-
-    formMsg.textContent='Готово! Заявка принята.';
+    formMsg.textContent='Отправляем...';
     formMsg.classList.add('ok');
-    toast.classList.add('show');
-    setTimeout(()=>toast.classList.remove('show'),3500);
 
-    e.target.reset();
-    fDate.value=today;
-    updateSummary();
+    const ok = await sendToTelegram(data);
+
+    if(ok){
+      formMsg.textContent='Готово! Заявка ушла мастеру.';
+      formMsg.className='msg ok';
+      showToast('✅ Заявка отправлена в Telegram');
+      e.target.reset();
+      fDate.value=today;
+      updateSummary();
+    }else{
+      formMsg.textContent='Не удалось отправить. Попробуй ещё раз.';
+      formMsg.className='msg err';
+      showToast('❌ Ошибка отправки');
+    }
   });
 </script>
 </body>

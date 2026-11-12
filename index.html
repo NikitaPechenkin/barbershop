@@ -7,6 +7,7 @@
 <style>
   :root{
     --bg:#0d0d0f; --card:#17171b; --accent:#e8b04b; --text:#f4f4f4; --muted:#9a9aa2;
+    --err:#e85b5b;
   }
   *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
   html{scroll-behavior:smooth}
@@ -47,7 +48,7 @@
   .sec-title{font-size:clamp(28px,4vw,44px);font-weight:800;margin-bottom:10px;letter-spacing:-1px}
   .sec-sub{color:var(--muted);max-width:640px;margin-bottom:44px}
 
-  /* SERVICES */
+  /* GRID / CARDS */
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
   .card{background:var(--card);border:1px solid #26262c;border-radius:18px;padding:28px;transition:.25s}
   .card:hover{border-color:var(--accent);transform:translateY(-4px)}
@@ -71,10 +72,14 @@
     border:1px solid #2a2a31;border-radius:12px;color:var(--text);margin-bottom:14px;font-size:15px}
   .form input:focus,.form select:focus,.form textarea:focus{outline:none;border-color:var(--accent)}
   .form label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+  .msg{font-size:14px;margin-bottom:14px;min-height:20px}
+  .msg.err{color:var(--err)}
+  .msg.ok{color:var(--accent)}
+
   .summary{background:var(--card);border:1px solid #26262c;border-radius:18px;padding:28px}
   .summary h3{margin-bottom:16px}
   .summary .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222}
-  .summary .row:last-child{border:none;font-weight:800;color:var(--accent);font-size:20px}
+  .summary .row:last-of-type{border:none;font-weight:800;color:var(--accent);font-size:20px}
 
   /* REVIEWS */
   .review{background:var(--card);border:1px solid #26262c;border-radius:18px;padding:24px}
@@ -91,7 +96,7 @@
   /* TOAST */
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
     background:var(--accent);color:#0d0d0f;font-weight:700;padding:16px 32px;border-radius:100px;
-    transition:.4s;z-index:999}
+    transition:.4s;z-index:999;white-space:nowrap}
   .toast.show{transform:translateX(-50%) translateY(0)}
 </style>
 </head>
@@ -158,11 +163,11 @@
     <h2 class="sec-title">Онлайн-запись</h2>
     <p class="sec-sub">Выбери услугу и время — подтверждение придёт в мессенджер.</p>
     <div class="booking-grid">
-      <form class="form" id="bookForm">
-        <label>Имя</label>
+      <form class="form" id="bookForm" novalidate>
+        <label>Имя *</label>
         <input type="text" id="fName" placeholder="Как к тебе обращаться" required>
 
-        <label>Телефон</label>
+        <label>Телефон *</label>
         <input type="tel" id="fPhone" placeholder="+7 (___) ___-__-__" required>
 
         <label>Услуга</label>
@@ -175,7 +180,7 @@
           <option data-price="1500">Камуфляж седины — 1 500 ₽</option>
         </select>
 
-        <label>Дата</label>
+        <label>Дата *</label>
         <input type="date" id="fDate" required>
 
         <label>Время</label>
@@ -186,6 +191,10 @@
           <option>19:00</option><option>20:00</option>
         </select>
 
+        <label>Комментарий</label>
+        <textarea id="fComment" rows="2" placeholder="Пожелания (необязательно)"></textarea>
+
+        <div class="msg" id="formMsg"></div>
         <button class="btn" type="submit" style="width:100%">Записаться</button>
       </form>
 
@@ -195,6 +204,9 @@
         <div class="row"><span>Дата</span><span id="sDate">—</span></div>
         <div class="row"><span>Время</span><span id="sTime">—</span></div>
         <div class="row"><span>Итого</span><span id="sPrice">—</span></div>
+        <div style="margin-top:18px;font-size:13px;color:var(--muted)">
+          Демо: заявка сохраняется в браузере и выводится в консоль.
+        </div>
       </div>
     </div>
   </div>
@@ -236,10 +248,14 @@
   const fService=document.getElementById('fService'),
         fDate=document.getElementById('fDate'),
         fTime=document.getElementById('fTime'),
+        fName=document.getElementById('fName'),
+        fPhone=document.getElementById('fPhone'),
+        fComment=document.getElementById('fComment'),
         sService=document.getElementById('sService'),
         sDate=document.getElementById('sDate'),
         sTime=document.getElementById('sTime'),
         sPrice=document.getElementById('sPrice'),
+        formMsg=document.getElementById('formMsg'),
         toast=document.getElementById('toast');
 
   const today=new Date().toISOString().split('T')[0];
@@ -255,20 +271,58 @@
   [fService,fDate,fTime].forEach(el=>el.addEventListener('change',updateSummary));
   updateSummary();
 
+  function validPhone(v){
+    const digits=v.replace(/\D/g,'');
+    return digits.length>=10 && digits.length<=15;
+  }
+
   document.getElementById('bookForm').addEventListener('submit',e=>{
     e.preventDefault();
+    formMsg.className='msg';
+    formMsg.textContent='';
+
+    if(!fName.value.trim()){
+      formMsg.textContent='Введи имя';
+      formMsg.classList.add('err');
+      fName.focus();
+      return;
+    }
+    if(!validPhone(fPhone.value)){
+      formMsg.textContent='Введи корректный телефон';
+      formMsg.classList.add('err');
+      fPhone.focus();
+      return;
+    }
+    if(!fDate.value){
+      formMsg.textContent='Выбери дату';
+      formMsg.classList.add('err');
+      fDate.focus();
+      return;
+    }
+
     const data={
-      name:document.getElementById('fName').value,
-      phone:document.getElementById('fPhone').value,
+      name:fName.value.trim(),
+      phone:fPhone.value.trim(),
       service:sService.textContent,
       date:sDate.textContent,
       time:sTime.textContent,
-      price:sPrice.textContent
+      price:sPrice.textContent,
+      comment:fComment.value.trim(),
+      created:new Date().toISOString()
     };
-    console.log('ДЕМО-ЗАЯВКА:',data);
 
+    const all=JSON.parse(localStorage.getItem('brut_bookings')||'[]');
+    all.push(data);
+    localStorage.setItem('brut_bookings',JSON.stringify(all));
+
+    console.log('ЗАЯВКА:',data);
+    console.log('Всего заявок:',all.length);
+
+    formMsg.textContent='Готово! Заявка принята.';
+    formMsg.classList.add('ok');
     toast.classList.add('show');
     setTimeout(()=>toast.classList.remove('show'),3500);
+
     e.target.reset();
     fDate.value=today;
     updateSummary();

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Барбершоп — демо-шаблон</title>
+<style>
+  :root{
+    --bg:#0d0d0f; --card:#17171b; --accent:#e8b04b; --text:#f4f4f4; --muted:#9a9aa2;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',system-ui,sans-serif}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);line-height:1.6}
+  a{color:var(--accent);text-decoration:none}
+  .container{max-width:1200px;margin:0 auto;padding:0 6vw}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:100;background:rgba(13,13,15,.85);
+    backdrop-filter:blur(12px);border-bottom:1px solid #1f1f24}
+  nav .container{display:flex;justify-content:space-between;align-items:center;padding-top:16px;padding-bottom:16px}
+  .logo{font-size:22px;font-weight:800;letter-spacing:-1px;color:var(--muted)}
+  nav ul{display:flex;gap:28px;list-style:none}
+  nav a{color:var(--text);font-size:15px;opacity:.85}
+  nav a:hover{color:var(--accent);opacity:1}
+  .nav-btn{background:var(--accent);color:#0d0d0f!important;font-weight:700;
+    padding:10px 22px;border-radius:100px;opacity:1!important}
+  @media(max-width:720px){nav ul{display:none}}
+
+  /* HERO */
+  .hero{padding:100px 0 80px;background:
+    radial-gradient(circle at 80% 20%, rgba(232,176,75,.16), transparent 45%),
+    radial-gradient(circle at 10% 90%, rgba(232,176,75,.07), transparent 40%)}
+  .hero h1{font-size:clamp(38px,7vw,76px);line-height:1.05;font-weight:800;letter-spacing:-2px}
+  .hero h1 span{color:var(--accent)}
+  .hero .rating{font-size:20px;color:var(--accent);margin:18px 0 8px}
+  .hero .addr{color:var(--muted);margin-bottom:32px}
+  .btn{display:inline-block;background:var(--accent);color:#0d0d0f;font-weight:700;
+    padding:16px 40px;border-radius:100px;font-size:16px;cursor:pointer;border:none;transition:.25s}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(232,176,75,.3)}
+  .btn-outline{background:transparent;color:var(--accent);border:2px solid var(--accent);margin-left:12px}
+  .btn-outline:hover{background:var(--accent);color:#0d0d0f}
+  @media(max-width:600px){.btn-outline{margin:12px 0 0}}
+
+  /* SECTIONS */
+  section{padding:80px 0}
+  .sec-title{font-size:clamp(28px,4vw,44px);font-weight:800;margin-bottom:10px;letter-spacing:-1px}
+  .sec-sub{color:var(--muted);max-width:640px;margin-bottom:44px}
+
+  /* SERVICES */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+  .card{background:var(--card);border:1px solid #26262c;border-radius:18px;padding:28px;transition:.25s}
+  .card:hover{border-color:var(--accent);transform:translateY(-4px)}
+  .card .ico{font-size:34px;margin-bottom:14px}
+  .card h3{font-size:18px;margin-bottom:6px}
+  .card p{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .price{color:var(--accent);font-weight:800;font-size:22px}
+
+  /* BOOKING */
+  #booking{background:#111114}
+  .booking-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:start}
+  @media(max-width:860px){.booking-grid{grid-template-columns:1fr}}
+  .form input,.form select,.form textarea{width:100%;padding:15px;background:var(--card);
+    border:1px solid #2a2a31;border-radius:12px;color:var(--text);margin-bottom:14px;font-size:15px}
+  .form input:focus,.form select:focus,.form textarea:focus{outline:none;border-color:var(--accent)}
+  .form label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+  .summary{background:var(--card);border:1px solid #26262c;border-radius:18px;padding:28px}
+  .summary h3{margin-bottom:16px}
+  .summary .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #222}
+  .summary .row:last-child{border:none;font-weight:800;color:var(--accent);font-size:20px}
+
+  /* REVIEWS */
+  .review{background:var(--card);border:1px solid #26262c;border-radius:18px;padding:24px}
+  .review .stars{color:var(--accent);margin-bottom:10px}
+  .review .who{font-weight:700;margin-top:12px}
+  .review .who span{color:var(--muted);font-weight:400;font-size:13px}
+
+  /* MAP */
+  .map-wrap{border-radius:18px;overflow:hidden;border:1px solid #26262c}
+  .map-wrap iframe{width:100%;height:420px;border:0;display:block;filter:grayscale(.3)}
+
+  footer{text-align:center;padding:50px 0;color:var(--muted);font-size:13.5px;border-top:1px solid #1f1f24}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
+    background:var(--accent);color:#0d0d0f;font-weight:700;padding:16px 32px;border-radius:100px;
+    transition:.4s;z-index:999}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <div class="logo">[НАЗВАНИЕ]</div>
+    <ul>
+      <li><a href="#services">Услуги</a></li>
+      <li><a href="#booking">Запись</a></li>
+      <li><a href="#reviews">Отзывы</a></li>
+      <li><a href="#map">Контакты</a></li>
+      <li><a href="#booking" class="nav-btn">Записаться</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <h1>Барбершоп<br><span>[НАЗВАНИЕ]</span></h1>
+    <div class="rating">★★★★★ [рейтинг] <span style="color:var(--muted);font-size:15px">· [источник]</span></div>
+    <div class="addr">📍 [город], [адрес] · [часы работы]</div>
+    <a href="#booking" class="btn">Записаться онлайн</a>
+    <a href="#map" class="btn btn-outline">Как добраться</a>
+  </div>
+</header>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <h2 class="sec-title">Услуги и цены</h2>
+    <p class="sec-sub">[Краткое описание — например: фиксированные цены, запись на конкретное время.]</p>
+    <div class="grid">
+      <div class="card"><div class="ico">✂️</div><h3>[Услуга 1]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
+      <div class="card"><div class="ico">🧔</div><h3>[Услуга 2]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
+      <div class="card"><div class="ico">🪒</div><h3>[Услуга 3]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
+      <div class="card"><div class="ico">💈</div><h3>[Услуга 4]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
+      <div class="card"><div class="ico">👦</div><h3>[Услуга 5]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
+      <div class="card"><div class="ico">🎨</div><h3>[Услуга 6]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="booking">
+  <div class="container">
+    <h2 class="sec-title">Онлайн-запись</h2>
+    <p class="sec-sub">[Текст-заглушка: выбери услугу и время — подтверждение придёт в мессенджер.]</p>
+    <div class="booking-grid">
+      <form class="form" id="bookForm">
+        <label>Имя</label>
+        <input type="text" id="fName" placeholder="[Имя]" required>
+
+        <label>Телефон</label>
+        <input type="tel" id="fPhone" placeholder="+7 (___) ___-__-__" required>
+
+        <label>Услуга</label>
+        <select id="fService">
+          <option data-price="1000">[Услуга 1] — 1 000 ₽</option>
+          <option data-price="800">[Услуга 2] — 800 ₽</option>
+          <option data-price="900">[Услуга 3] — 900 ₽</option>
+          <option data-price="1500">[Услуга 4] — 1 500 ₽</option>
+          <option data-price="700">[Услуга 5] — 700 ₽</option>
+          <option data-price="1200">[Услуга 6] — 1 200 ₽</option>
+        </select>
+
+        <label>Дата</label>
+        <input type="date" id="fDate" required>
+
+        <label>Время</label>
+        <select id="fTime">
+          <option>10:00</option><option>11:00</option><option>12:00</option>
+          <option>13:00</option><option>14:00</option><option>15:00</option>
+          <option>16:00</option><option>17:00</option>
+        </select>
+
+        <button class="btn" type="submit" style="width:100%">Записаться</button>
+      </form>
+
+      <div class="summary">
+        <h3>Твоя запись</h3>
+        <div class="row"><span>Услуга</span><span id="sService">—</span></div>
+        <div class="row"><span>Дата</span><span id="sDate">—</span></div>
+        <div class="row"><span>Время</span><span id="sTime">—</span></div>
+        <div class="row"><span>Итого</span><span id="sPrice">—</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="reviews">
+  <div class="container">
+    <h2 class="sec-title">Отзывы</h2>
+    <p class="sec-sub">[Заглушка: рейтинг и реальные отзывы подставляются позже.]</p>
+    <div class="grid">
+      <div class="review"><div class="stars">★★★★★</div><p>[Текст отзыва — заглушка.]</p><div class="who">[Имя] <span>· [дата]</span></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>[Текст отзыва — заглушка.]</p><div class="who">[Имя] <span>· [дата]</span></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>[Текст отзыва — заглушка.]</p><div class="who">[Имя] <span>· [дата]</span></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>[Текст отзыва — заглушка.]</p><div class="who">[Имя] <span>· [дата]</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section id="map">
+  <div class="container">
+    <h2 class="sec-title">Как нас найти</h2>
+    <p class="sec-sub">[Адрес — заглушка] · [часы работы]</p>
+    <div class="map-wrap">
+      <!-- координаты-заглушка: Москва, центр -->
+      <iframe src="https://yandex.ru/map-widget/v1/?ll=37.617700%2C55.755800&z=15&pt=37.617700,55.755800,pm2rdm" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<footer>
+  [НАЗВАНИЕ] · [город], [адрес] · [рейтинг] ★ · Запись онлайн · [часы работы]
+</footer>
+
+<div class="toast" id="toast">✅ Заявка принята! (демо)</div>
+
+<script>
+  const fService=document.getElementById('fService'),
+        fDate=document.getElementById('fDate'),
+        fTime=document.getElementById('fTime'),
+        sService=document.getElementById('sService'),
+        sDate=document.getElementById('sDate'),
+        sTime=document.getElementById('sTime'),
+        sPrice=document.getElementById('sPrice'),
+        toast=document.getElementById('toast');
+
+  const today=new Date().toISOString().split('T')[0];
+  fDate.min=today; fDate.value=today;
+
+  function updateSummary(){
+    const opt=fService.options[fService.selectedIndex];
+    sService.textContent=opt.text.split('—')[0].trim();
+    sPrice.textContent=opt.dataset.price+' ₽';
+    sDate.textContent=fDate.value ? new Date(fDate.value).toLocaleDateString('ru-RU') : '—';
+    sTime.textContent=fTime.value;
+  }
+  [fService,fDate,fTime].forEach(el=>el.addEventListener('change',updateSummary));
+  updateSummary();
+
+  document.getElementById('bookForm').addEventListener('submit',e=>{
+    e.preventDefault();
+    // ДЕМО: заявка никуда не уходит, только в консоль
+    const data={
+      name:document.getElementById('fName').value,
+      phone:document.getElementById('fPhone').value,
+      service:sService.textContent,
+      date:sDate.textContent,
+      time:sTime.textContent,
+      price:sPrice.textContent
+    };
+    console.log('ДЕМО-ЗАЯВКА:',data);
+
+    toast.classList.add('show');
+    setTimeout(()=>toast.classList.remove('show'),3500);
+    e.target.reset();
+    fDate.value=today;
+    updateSummary();
+  });
+</script>
+</body>
+</html>

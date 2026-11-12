@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Барбершоп — демо-шаблон</title>
+<title>BRUT. — барбершоп (демо)</title>
 <style>
   :root{
     --bg:#0d0d0f; --card:#17171b; --accent:#e8b04b; --text:#f4f4f4; --muted:#9a9aa2;
@@ -18,7 +18,8 @@
   nav{position:sticky;top:0;z-index:100;background:rgba(13,13,15,.85);
     backdrop-filter:blur(12px);border-bottom:1px solid #1f1f24}
   nav .container{display:flex;justify-content:space-between;align-items:center;padding-top:16px;padding-bottom:16px}
-  .logo{font-size:22px;font-weight:800;letter-spacing:-1px;color:var(--muted)}
+  .logo{font-size:22px;font-weight:800;letter-spacing:-1px}
+  .logo span{color:var(--accent)}
   nav ul{display:flex;gap:28px;list-style:none}
   nav a{color:var(--text);font-size:15px;opacity:.85}
   nav a:hover{color:var(--accent);opacity:1}
@@ -54,6 +55,13 @@
   .card h3{font-size:18px;margin-bottom:6px}
   .card p{color:var(--muted);font-size:14px;margin-bottom:14px}
   .price{color:var(--accent);font-weight:800;font-size:22px}
+
+  /* MASTERS */
+  .master{background:var(--card);border:1px solid #26262c;border-radius:18px;padding:24px;text-align:center}
+  .master .ava{width:64px;height:64px;border-radius:50%;background:var(--accent);color:#0d0d0f;
+    display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;margin:0 auto 14px}
+  .master h3{font-size:17px;margin-bottom:4px}
+  .master p{color:var(--muted);font-size:14px}
 
   /* BOOKING */
   #booking{background:#111114}
@@ -92,9 +100,10 @@
 <!-- NAV -->
 <nav>
   <div class="container">
-    <div class="logo">[НАЗВАНИЕ]</div>
+    <div class="logo">BRUT<span>.</span></div>
     <ul>
       <li><a href="#services">Услуги</a></li>
+      <li><a href="#masters">Мастера</a></li>
       <li><a href="#booking">Запись</a></li>
       <li><a href="#reviews">Отзывы</a></li>
       <li><a href="#map">Контакты</a></li>
@@ -106,9 +115,9 @@
 <!-- HERO -->
 <header class="hero">
   <div class="container">
-    <h1>Барбершоп<br><span>[НАЗВАНИЕ]</span></h1>
-    <div class="rating">★★★★★ [рейтинг] <span style="color:var(--muted);font-size:15px">· [источник]</span></div>
-    <div class="addr">📍 [город], [адрес] · [часы работы]</div>
+    <h1>Барбершоп<br><span>BRUT.</span></h1>
+    <div class="rating">★★★★★ 4.9 <span style="color:var(--muted);font-size:15px">· Яндекс Карты</span></div>
+    <div class="addr">📍 Демо-город, ул. Примерная, 12 · Ежедневно 10:00–21:00</div>
     <a href="#booking" class="btn">Записаться онлайн</a>
     <a href="#map" class="btn btn-outline">Как добраться</a>
   </div>
@@ -118,14 +127,27 @@
 <section id="services">
   <div class="container">
     <h2 class="sec-title">Услуги и цены</h2>
-    <p class="sec-sub">[Краткое описание — например: фиксированные цены, запись на конкретное время.]</p>
+    <p class="sec-sub">Стрижка без лишних слов — фиксированные цены, запись на конкретное время.</p>
     <div class="grid">
-      <div class="card"><div class="ico">✂️</div><h3>[Услуга 1]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
-      <div class="card"><div class="ico">🧔</div><h3>[Услуга 2]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
-      <div class="card"><div class="ico">🪒</div><h3>[Услуга 3]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
-      <div class="card"><div class="ico">💈</div><h3>[Услуга 4]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
-      <div class="card"><div class="ico">👦</div><h3>[Услуга 5]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
-      <div class="card"><div class="ico">🎨</div><h3>[Услуга 6]</h3><p>[Описание услуги.]</p><div class="price">[цена] ₽</div></div>
+      <div class="card"><div class="ico">✂️</div><h3>Мужская стрижка</h3><p>Классика, фейд, текстура — под тип лица.</p><div class="price">1 200 ₽</div></div>
+      <div class="card"><div class="ico">🧔</div><h3>Оформление бороды</h3><p>Контуринг, тримминг, уход.</p><div class="price">800 ₽</div></div>
+      <div class="card"><div class="ico">🪒</div><h3>Бритьё опасной бритвой</h3><p>Королевское бритьё с горячим полотенцем.</p><div class="price">1 000 ₽</div></div>
+      <div class="card"><div class="ico">💈</div><h3>Стрижка + борода</h3><p>Комплекс — выгоднее, чем по отдельности.</p><div class="price">1 700 ₽</div></div>
+      <div class="card"><div class="ico">👦</div><h3>Детская стрижка</h3><p>До 12 лет, аккуратно и спокойно.</p><div class="price">900 ₽</div></div>
+      <div class="card"><div class="ico">🎨</div><h3>Камуфляж седины</h3><p>Естественный цвет, без эффекта краски.</p><div class="price">1 500 ₽</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MASTERS -->
+<section id="masters">
+  <div class="container">
+    <h2 class="sec-title">Мастера</h2>
+    <p class="sec-sub">Те, кто делает результат.</p>
+    <div class="grid">
+      <div class="master"><div class="ava">М</div><h3>Максим</h3><p>Фейды, текстура · 5 лет</p></div>
+      <div class="master"><div class="ava">А</div><h3>Артём</h3><p>Классика, борода · 7 лет</p></div>
+      <div class="master"><div class="ava">К</div><h3>Кирилл</h3><p>Бритьё, уход · 4 года</p></div>
     </div>
   </div>
 </section>
@@ -134,23 +156,23 @@
 <section id="booking">
   <div class="container">
     <h2 class="sec-title">Онлайн-запись</h2>
-    <p class="sec-sub">[Текст-заглушка: выбери услугу и время — подтверждение придёт в мессенджер.]</p>
+    <p class="sec-sub">Выбери услугу и время — подтверждение придёт в мессенджер.</p>
     <div class="booking-grid">
       <form class="form" id="bookForm">
         <label>Имя</label>
-        <input type="text" id="fName" placeholder="[Имя]" required>
+        <input type="text" id="fName" placeholder="Как к тебе обращаться" required>
 
         <label>Телефон</label>
         <input type="tel" id="fPhone" placeholder="+7 (___) ___-__-__" required>
 
         <label>Услуга</label>
         <select id="fService">
-          <option data-price="1000">[Услуга 1] — 1 000 ₽</option>
-          <option data-price="800">[Услуга 2] — 800 ₽</option>
-          <option data-price="900">[Услуга 3] — 900 ₽</option>
-          <option data-price="1500">[Услуга 4] — 1 500 ₽</option>
-          <option data-price="700">[Услуга 5] — 700 ₽</option>
-          <option data-price="1200">[Услуга 6] — 1 200 ₽</option>
+          <option data-price="1200">Мужская стрижка — 1 200 ₽</option>
+          <option data-price="800">Оформление бороды — 800 ₽</option>
+          <option data-price="1000">Бритьё опасной бритвой — 1 000 ₽</option>
+          <option data-price="1700">Стрижка + борода — 1 700 ₽</option>
+          <option data-price="900">Детская стрижка — 900 ₽</option>
+          <option data-price="1500">Камуфляж седины — 1 500 ₽</option>
         </select>
 
         <label>Дата</label>
@@ -160,7 +182,8 @@
         <select id="fTime">
           <option>10:00</option><option>11:00</option><option>12:00</option>
           <option>13:00</option><option>14:00</option><option>15:00</option>
-          <option>16:00</option><option>17:00</option>
+          <option>16:00</option><option>17:00</option><option>18:00</option>
+          <option>19:00</option><option>20:00</option>
         </select>
 
         <button class="btn" type="submit" style="width:100%">Записаться</button>
@@ -181,12 +204,12 @@
 <section id="reviews">
   <div class="container">
     <h2 class="sec-title">Отзывы</h2>
-    <p class="sec-sub">[Заглушка: рейтинг и реальные отзывы подставляются позже.]</p>
+    <p class="sec-sub">Рейтинг 4.9 — вот что говорят клиенты.</p>
     <div class="grid">
-      <div class="review"><div class="stars">★★★★★</div><p>[Текст отзыва — заглушка.]</p><div class="who">[Имя] <span>· [дата]</span></div></div>
-      <div class="review"><div class="stars">★★★★★</div><p>[Текст отзыва — заглушка.]</p><div class="who">[Имя] <span>· [дата]</span></div></div>
-      <div class="review"><div class="stars">★★★★★</div><p>[Текст отзыва — заглушка.]</p><div class="who">[Имя] <span>· [дата]</span></div></div>
-      <div class="review"><div class="stars">★★★★★</div><p>[Текст отзыва — заглушка.]</p><div class="who">[Имя] <span>· [дата]</span></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>«Записался онлайн, пришёл — без ожидания. Стрижка топ, атмосфера ламповая.»</p><div class="who">Алексей <span>· 2 недели назад</span></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>«Хожу полгода. Борода всегда идеально. Мастера слышат, что просишь.»</p><div class="who">Дмитрий <span>· месяц назад</span></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>«Удобно, что есть запись онлайн — не надо звонить. Цены честные.»</p><div class="who">Игорь <span>· 3 недели назад</span></div></div>
+      <div class="review"><div class="stars">★★★★★</div><p>«Привёл сына на детскую стрижку — сделали аккуратно, ребёнок доволен.»</p><div class="who">Сергей <span>· 2 месяца назад</span></div></div>
     </div>
   </div>
 </section>
@@ -195,16 +218,16 @@
 <section id="map">
   <div class="container">
     <h2 class="sec-title">Как нас найти</h2>
-    <p class="sec-sub">[Адрес — заглушка] · [часы работы]</p>
+    <p class="sec-sub">Демо-город, ул. Примерная, 12 · Ежедневно 10:00–21:00</p>
     <div class="map-wrap">
-      <!-- координаты-заглушка: Москва, центр -->
       <iframe src="https://yandex.ru/map-widget/v1/?ll=37.617700%2C55.755800&z=15&pt=37.617700,55.755800,pm2rdm" loading="lazy"></iframe>
     </div>
   </div>
 </section>
 
 <footer>
-  [НАЗВАНИЕ] · [город], [адрес] · [рейтинг] ★ · Запись онлайн · [часы работы]
+  BRUT. · Барбершоп · Демо-город, ул. Примерная, 12<br>
+  ★ 4.9 · Запись онлайн · Ежедневно 10:00–21:00 · +7 (900) 000-00-00 · @brut_demo
 </footer>
 
 <div class="toast" id="toast">✅ Заявка принята! (демо)</div>
@@ -234,7 +257,6 @@
 
   document.getElementById('bookForm').addEventListener('submit',e=>{
     e.preventDefault();
-    // ДЕМО: заявка никуда не уходит, только в консоль
     const data={
       name:document.getElementById('fName').value,
       phone:document.getElementById('fPhone').value,
